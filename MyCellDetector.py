@@ -56,7 +56,7 @@ class MyCellDetector(object):
 
     def countour_frame(self, masked_image,area_mn = 1,area_mx = 1e10, keypoints = {}):
         _, cnts, _ = cv2.findContours(image = masked_image, mode = cv2.RETR_EXTERNAL,\
-                                      method = cv2.CHAIN_APPROX_SIMPLE)
+                                      method = cv2.CHAIN_APPROX_NONE)
         
         
         self.keypoints = keypoints
