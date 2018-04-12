@@ -153,7 +153,7 @@ class MyCellDetector(object):
             
         tmp = self.dispImCenter.copy()
         tmp = tmp.swapaxes(0,1)
-        tmp = cv2.putText(tmp.copy(), "# cells: {}".format(n), (10,100), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 2)
+        self.dispImCenter = cv2.putText(self.dispImCenter.copy(), "# cells: {}".format(n), (10,100), cv2.FONT_HERSHEY_DUPLEX, 2, (255, 255, 255), 2)
         self.dispImCenter = tmp.copy().swapaxes(0,1)
         
         return self.dispImCont, self.dispImCenter, self.dispImBox
