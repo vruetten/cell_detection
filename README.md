@@ -17,10 +17,10 @@ demo code
 ```
 
 ## simple demo ##
-  
- <img width="200"  src="https://github.com/vrutten/cell_detection/blob/master/results/orginal.png">  <img width="200" src="https://github.com/vrutten/cell_detection/blob/master/results/masked_4.png">
 
-<img width="200" src="https://github.com/vrutten/cell_detection/blob/master/results/mask_wContours_4.png"><img width="200" alt="portfolio_view" src="https://github.com/vrutten/cell_detection/blob/master/results/detection_wCenters_4.png ">
+ <img width="200" src="https://github.com/vrutten/cell_detection/blob/master/results/orginal.png" >          <img width="200" src="https://github.com/vrutten/cell_detection/blob/master/results/masked_4.png">
+
+<img width="200" src="https://github.com/vrutten/cell_detection/blob/master/results/mask_wContours_4.png">          <img width="200" src="https://github.com/vrutten/cell_detection/blob/master/results/detection_wCenters_4.png ">
 
 
 
