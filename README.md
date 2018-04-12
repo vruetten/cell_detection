@@ -1,6 +1,6 @@
 # cell detection pipeline
 
-simple cell detection pipeline using OpenCV
+first attempt at simple cell detection pipeline using OpenCV
 
 ## Installing ##
 
