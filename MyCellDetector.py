@@ -53,7 +53,47 @@ class MyCellDetector(object):
         self.eroded = cv2.erode(frame.astype('uint8'), kernel, iterations=ite)
         return self.eroded
     
+    def define_parameters(self):
+        # Setup SimpleBlobDetector parameters.
+        self.params = cv2.SimpleBlobDetector_Params()
+        # Change thresholds
+        self.params.minThreshold = 10;
+        self.params.maxThreshold = 255;
 
+        # Filter by Area.
+        self.params.filterByArea = True
+        self.params.minArea = 15
+        
+        self..params.blobColor = 255
+
+        # Filter by Circularity
+        self.params.filterByCircularity = False
+        self.params.minCircularity = 0.01
+
+        # Filter by Convexity
+        self.params.filterByConvexity = False
+        self.params.minConvexity = 0.01
+
+        # Filter by Inertia
+        self.params.filterByInertia = False
+        self.params.minInertiaRatio = 0.01 
+        return self.params
+    
+
+    def print_keypoints_list(self, frame, keypointlist, col = (0,0,255)):
+        self.im_with_keypoints = cv2.drawKeypoints(frame, keypointlist, np.array([]), col, cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        return self.im_with_keypoints
+
+    
+    def create_detector(self, params):
+        self.detector = cv2.SimpleBlobDetector_create(params)
+        return self.detector
+
+    def get_kypts_w_detector(self, detector, frame):
+        self.kpts = detector.detect(frame)
+        return self.kpts
+        
+    
     def countour_frame(self, masked_image,area_mn = 1,area_mx = 1e10, keypoints = {}):
         _, cnts, _ = cv2.findContours(image = masked_image, mode = cv2.RETR_EXTERNAL,\
                                       method = cv2.CHAIN_APPROX_NONE)
