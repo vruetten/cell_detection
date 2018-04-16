@@ -2,24 +2,54 @@
 from __future__ import print_function
 import numpy as np
 import cv2
+from glob import glob
 from PIL import ImageFont, ImageDraw, Image 
 import os, sys
 from PyQt5 import QtCore
 
 class MyCellDetector(object):
+    
     def __init__(self):
         self.p = 1
         return None
     
+    def read_files(self, file_paths):
+        ''' read multiple files'''
+        files = glob(file_paths+ '*.jpeg')
+        file_num = len(files)
+        print('number of images to process: {0}'.format(file_num))
+        frames = []
+        for i in range(file_num):
+            frames.append(self.read_file(files[i]))
+        return np.array(frames)  
+        
+    
     def read_file(self,file_path: str):
         self.frame = np.array(Image.open(file_path))
+        ## if you want to resize the frame - this could speed things up a lot
 #         self.frame = cv2.resize(frame, (self.imW,self.imH))
         return self.frame
      
+    def gray_frames(self, frames):
+        self.colour_dim = len(frames.shape)-1
+        self.grays = np.mean(frames, axis = self.colour_dim)
+        return self.grays
+        
     def gray_frame(self,frame):
         self.gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         return self.gray
+     
+    def blur_frames(self, frames, kernel=(3,3), filterType = 'gaussian' ):
+        frame_num = frames.shape[0]
+        blurs = []
         
+        for i in range(frame_num):
+            blurs.append(self.blur_frame(frames[i], kernel, filterType))
+        self.blurs = np.array(blurs) 
+        return  self.blurs.astype('uint8')
+            
+            
+            
     def blur_frame(self,frame, kernel=(3,3), filterType = 'gaussian'):
         self.blurWin = kernel
         self.blur = None
@@ -27,15 +57,20 @@ class MyCellDetector(object):
             if filterType =='gaussian':
                 self.blur = cv2.GaussianBlur(frame, self.blurWin, 1)
             else:
-                self.blur = cv2.medianBlur(frame, self.blurWin[0])
+                self.blur = cv2.medianBlur(frame.astype('uint8'), self.blurWin[0])
         except:
             print('make sure kernel is composed of odd numbers')
         return self.blur
+    
     
     def get_percentile(self, frame, perc = 90):
         self.pVal_l = np.percentile(frame, 90)
         return self.pVal_l
     
+    def mask_frame(self, grays, pVal_l, pVal_u = 255):
+        frame_num = grays.shape[0]
+        
+        
     def mask_frame(self, gray, pVal_l, pVal_u = 255):
         self.mask = (gray>pVal_l)*(gray<pVal_u)
         self.masked = np.zeros_like(gray)
@@ -64,7 +99,7 @@ class MyCellDetector(object):
         self.params.filterByArea = True
         self.params.minArea = 15
         
-        self..params.blobColor = 255
+        self.params.blobColor = 255
 
         # Filter by Circularity
         self.params.filterByCircularity = False
@@ -89,6 +124,15 @@ class MyCellDetector(object):
         self.detector = cv2.SimpleBlobDetector_create(params)
         return self.detector
 
+    def get_kyptss_w_detector(self, detector, frames):
+        frame_num = frames.shape[0]
+        self.kptss = []
+        for i in range(frame_num):
+            self.kptss.append(self.get_kypts_w_detector(detector, frames[i]))
+            print('# keypoint detected: {0}'.format(len(kptss[i])))
+        return self.kptss
+            
+        
     def get_kypts_w_detector(self, detector, frame):
         self.kpts = detector.detect(frame)
         return self.kpts
@@ -162,7 +206,16 @@ class MyCellDetector(object):
         self.keypoints[keylen]['areas'] = a
         
         return self.keypoints
-        
+   
+    def print_keypointss(self, kptss, frames):
+        frame_num = frames.shape[0]
+        self.pics = []
+        for i in range(frame_num):
+            pic = C.print_keypoints_list(scale(saturate(frames[i])), kptss[i],col = (0,255,255))
+            text =  "# cells: {}".format(len(kptss[i]))
+            self.pics.append(self.write2im(pic, text = text))
+        return self.pics
+            
     def print_keypoints(self, key, displayimage, col= (0,255,0)):
         if len(displayimage.shape)<3:
             self.dispIm = np.repeat(displayimage[:,:,None], repeats = 3,axis = 2)
