@@ -129,7 +129,7 @@ class MyCellDetector(object):
         self.kptss = []
         for i in range(frame_num):
             self.kptss.append(self.get_kypts_w_detector(detector, frames[i]))
-            print('# keypoint detected: {0}'.format(len(kptss[i])))
+            print('# keypoint detected: {0}'.format(len(self.kptss[i])))
         return self.kptss
             
         
@@ -211,9 +211,7 @@ class MyCellDetector(object):
         frame_num = frames.shape[0]
         self.pics = []
         for i in range(frame_num):
-            pic = C.print_keypoints_list(scale(saturate(frames[i])), kptss[i],col = (0,255,255))
-            text =  "# cells: {}".format(len(kptss[i]))
-            self.pics.append(self.write2im(pic, text = text))
+            self.pics.append(self.print_keypoints_list(frames[i], kptss[i],col = (0,255,255)))
         return self.pics
             
     def print_keypoints(self, key, displayimage, col= (0,255,0)):
