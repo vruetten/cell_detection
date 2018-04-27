@@ -13,9 +13,9 @@ class MyCellDetector(object):
         self.p = 1
         return None
     
-    def read_files(self, file_paths):
+    def read_files(self, folder_path, extension):
         ''' read multiple files'''
-        files = glob(file_paths+ '*.jpeg')
+        files = glob(folder_path+'/'+ extension)
         file_num = len(files)
         print('number of images to process: {0}'.format(file_num))
         frames = []
